@@ -2,19 +2,34 @@ data class Token(val type: Type, val lexeme: Lexeme, val literal: Literal?, val 
 	override fun toString() = "$type $lexeme $literal"
 }
 
-enum class Type {
-	LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
-	COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
+enum class Type(val token: String) {
+	LEFT_PAREN("("),
+	RIGHT_PAREN(")"),
+	LEFT_BRACE("{"),
+	RIGHT_BRACE("}"),
+	COMMA(","),
+	DOT("."),
+	MINUS("-"),
+	PLUS("+"),
+	SEMICOLON(";"),
+	SLASH("/"),
+	STAR("*"),
 
-	BANG, BANG_EQUAL,
-	EQUAL, EQUAL_EQUAL,
-	GREATER, GREATER_EQUAL,
-	LESS, LESS_EQUAL,
+	BANG("!"), BANG_EQUAL("!="),
+	EQUAL("="), EQUAL_EQUAL("=="),
+	GREATER(">"), GREATER_EQUAL(">="),
+	LESS("<"), LESS_EQUAL("<="),
 
-	IDENTIFIER, STRING, NUMBER,
+	IDENTIFIER(""), STRING(""), NUMBER(""),
 
-	AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
-	PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
+	AND("and"), CLASS("class"), ELSE("else"), FALSE("false"), FUN("fun"), FOR("for"), IF("if"), NIL("nil"), OR("or"),
+	PRINT("print"), RETURN("return"), SUPER("super"), THIS("this"), TRUE("true"), VAR("var"), WHILE("while"),
 
-	EOF
+	EOF("");
+
+	companion object {
+		fun parse(char: Char): Type {
+			TODO("Not yet implemented")
+		}
+	}
 }

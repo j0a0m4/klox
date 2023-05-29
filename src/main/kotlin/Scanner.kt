@@ -1,5 +1,5 @@
-class Scanner(private val source: Source) : ArrayList<Token>() {
-	private val tracker = Tracker(source.length)
+class Scanner(source: Source) : ArrayList<Token>() {
+	private val tracker = Tracker(source)
 
 	fun scanTokens(): List<Token> = with(tracker) {
 		while (isNotAtEnd) {
@@ -10,13 +10,13 @@ class Scanner(private val source: Source) : ArrayList<Token>() {
 		toList()
 	}
 
-	private fun scanToken() {
-		TODO("Not yet implemented")
+	private fun scanToken() = with(tracker) {
+		advance().also { Type.parse(it.char) }
 	}
 }
 
 
-class Tracker(private val sourceLength: Int) {
+class Tracker(private val source: Source) {
 	private var _start = 0
 	private var _current = 0
 
@@ -25,11 +25,18 @@ class Tracker(private val sourceLength: Int) {
 		get() = _line
 
 	val isAtEnd: Boolean
-		get() = _current >= sourceLength
+		get() = _current >= source.length
 	val isNotAtEnd: Boolean
 		get() = !isAtEnd
 
-	fun begin() {
+	val char: Char
+		get() = source.elementAt(_current)
+
+	fun begin() = apply {
 		_start = _current
+	}
+
+	fun advance() = apply {
+		_current++
 	}
 }
