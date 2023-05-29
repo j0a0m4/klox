@@ -12,8 +12,9 @@ enum class Type(val token: String) {
 	MINUS("-"),
 	PLUS("+"),
 	SEMICOLON(";"),
-	SLASH("/"),
 	STAR("*"),
+
+	SLASH("/"),
 
 	BANG("!"), BANG_EQUAL("!="),
 	EQUAL("="), EQUAL_EQUAL("=="),
@@ -28,8 +29,7 @@ enum class Type(val token: String) {
 	EOF("");
 
 	companion object {
-		fun parse(char: Char): Type {
-			TODO("Not yet implemented")
-		}
+		infix fun parse(char: Char): Type? =
+			values().find { it.token == char.toString() }
 	}
 }

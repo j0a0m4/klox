@@ -3,15 +3,17 @@ import kotlin.system.exitProcess
 
 object Error {
 
-	enum class Status(val code: Int) {
-		None(0),
-		InvalidArgument(64),
-		UserMistake(65);
+	enum class Status(val code: Int, val message: String) {
+		None(0, ""),
+		InvalidArgument(64, "Usage: klox [script]"),
+		LexicalError(65, "Unexpected character.");
 
-		fun panicIfFailure() {
-			if (this != None) {
-				exitProcess(code)
-			}
+		val isFlagged: Boolean
+			get() = this != None
+
+
+		fun killProcess() {
+			exitProcess(code)
 		}
 	}
 
@@ -24,18 +26,26 @@ object Error {
 			System.err.println("[line $line] Error $where: $message")
 		}
 	) {
+		val isNone: Boolean
+			get() = status == Status.None
+
 		private var status = Status.None
 
-		infix fun set(status: Status) {
+		private var line: Line = 0
+
+		infix fun set(status: Status) = apply {
 			this.status = status
 		}
 
-		private fun error(line: Line, message: String) {
-			logger.error(line, message, "")
+		fun handle() = with(status) {
+			if (isFlagged) {
+				logger.error(line, message, "")
+				killProcess()
+			}
 		}
 
-		fun handle() {
-			status.panicIfFailure()
+		infix fun on(line: Line) = apply {
+			this.line = line
 		}
 	}
 }
