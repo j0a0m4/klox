@@ -1,6 +1,6 @@
+import Error.Status
 import Option.*
 import java.io.File
-import kotlin.system.exitProcess
 
 fun main(args: Array<String>) = with(args) {
 	when (size.toOption) {
@@ -8,13 +8,16 @@ fun main(args: Array<String>) = with(args) {
 		REPL -> repl()
 		READ -> first().file.readText().eval()
 	}
+	error.handle()
 }
+
+val error = Error.Handler()
 
 private val String.file: File
 	get() = File(this)
 
 private val Int.toOption: Option
-	get() = Option.from(this)
+	get() = Option from this
 
 enum class Option {
 	REPL, READ, EXIT;
@@ -28,7 +31,7 @@ enum class Option {
 
 fun exit() {
 	println("Usage: klox [script]");
-	exitProcess(64);
+	error set Status.InvalidArgument
 }
 
 fun repl() {
@@ -37,5 +40,6 @@ fun repl() {
 		readlnOrNull()
 			?.eval()
 			?: break
+		error set Status.None
 	}
 }
