@@ -1,8 +1,6 @@
 import Error.Logger
 import kotlin.system.exitProcess
 
-typealias Line = Int
-
 object Error {
 
 	enum class Status(val code: Int) {

@@ -37,9 +37,7 @@ fun exit() {
 fun repl() {
 	while (true) {
 		print("> ")
-		readlnOrNull()
-			?.eval()
-			?: break
+		readlnOrNull()?.eval() ?: break
 		error set Status.None
 	}
 }
