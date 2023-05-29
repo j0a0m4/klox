@@ -1,30 +1,28 @@
-import java.nio.charset.Charset
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.util.*
+import Option.*
+import java.io.File
 import kotlin.system.exitProcess
 
-fun main(args: Array<String>) {
-	with(args) {
-		when (size) {
-			0    -> repl()
-			1    -> first().readBytes().execute()
-			else -> exit()
-		}
+fun main(args: Array<String>) = with(args) {
+	when (size.toOption) {
+		EXIT -> exit()
+		REPL -> repl()
+		READ -> first().file.readText().eval()
 	}
 }
 
-private val String.path
-	get() = Paths.get(this)
+private val String.file: File
+	get() = File(this)
 
-private fun String.readBytes() =
-	Files.readAllBytes(path)
-		.let { String(it, Charset.defaultCharset()) }
+private val Int.toOption: Option
+	get() = Option.from(this)
 
-private fun String.execute() {
-	val tokens = Scanner(this).tokens()
-	for (token in tokens) {
-		println(token)
+enum class Option {
+	REPL, READ, EXIT;
+
+	companion object {
+		infix fun from(size: Int) = Option.values()
+			.find { it.ordinal == size }
+			?: EXIT
 	}
 }
 
@@ -37,7 +35,7 @@ fun repl() {
 	while (true) {
 		print("> ")
 		readlnOrNull()
-			?.execute()
+			?.eval()
 			?: break
 	}
 }
